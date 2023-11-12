@@ -13,14 +13,14 @@
             #?(:clj [clojure.data.json :as json])
             #?(:clj [clojure.java.io :as io])))
 
-(def chart {:width 533
+(def chart {:width 1000
             :height 560
             :margin-top 20
             :margin-right 20
             :margin-bottom 35
             :margin-left 40})
 
-#?(:clj (def data (charred/read-json (io/resource "data/nations.json"))))
+#?(:clj (defonce data (charred/read-json (io/resource "data/nations.json"))))
 
 #?(:clj (def shaped-data (ds/row-map (apply ds/concat (map ds/->dataset data))
                            (fn [row]
@@ -40,6 +40,25 @@
       (.nice)
       (.range (clj->js [(- height margin-bottom) margin-top])))))
 
+(e/def x-scale
+  (let [{:keys [width margin-left margin-right]} chart]
+    (-> (d3-scale/scaleLog)
+      (.domain (clj->js [200, 1e5]))
+      (.nice)
+      (.range (clj->js [margin-left (- width margin-right)])))))
+
+(e/defn Plot []
+  (let [shaped-data (e/server (let [y-life-expectancy (vec (:life-expect shaped-data))
+                                    x-income (map second (get shaped-data "income"))
+                                    population (map second (get shaped-data "population"))]
+                                (map vector x-income y-life-expectancy population)))]
+    (svg/g (dom/props {:stroke "black"})
+      
+      (e/for-by identity [{:keys [x y population]} shaped-data]
+        (svg/circle (dom/props {:cx x
+                                :cy y
+                                :r population}))))))
+
 (e/defn Chart []
   (let [{:keys [width height]} chart]
     (dom/div
@@ -51,10 +70,11 @@
                            :style {:border "solid black 1px"
                                    :max-width "100%"
                                    :height "auto"}})
-        #_(lib/AxisBottom. {:chart chart
-                            :x-scale x-scale})
+        (lib/AxisBottom. {:chart chart
+                          :x-scale x-scale})
         (lib/AxisLeft. {:chart chart
-                          :y-scale y-scale})))))
+                        :y-scale y-scale})
+        (Plot.)))))
 
 (comment
   #?(:clj (def data (charred/read-json (io/resource "data/nations.json"))))
@@ -67,7 +87,11 @@
       [(stats/min c)
        (stats/max c)]))
 
-  (col->min-max shaped-data :life-expect)
+  (lib/col->min-max shaped-data :life-expect)
 
   (stats/min (:life-expect shaped-data))
-  (stats/max (:life-expect shaped-data)))
+  (stats/max (:life-expect shaped-data))
+
+  
+  
+  )

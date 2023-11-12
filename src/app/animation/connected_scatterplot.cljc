@@ -21,7 +21,7 @@
             :margin-bottom 30
             :margin-left 40})
 
-#?(:clj (def data (ds/->dataset "resources/data/driving.csv")))
+#?(:clj (defonce data (ds/->dataset "resources/data/driving.csv")))
 
 #?(:clj (defn col->min-max [data colname]
           (let [c (get data colname)]

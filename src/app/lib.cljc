@@ -24,9 +24,9 @@
                               :stroke-opacity 0.1
                               :stroke-width 1}))
         (svg/text (dom/props {:x x
-                              :y height
-                              :font-weight "bold"
-                              :text-anchor "end"})
+                              :y (+ height 9)
+                              :font-size 10
+                              :dy "0.71em"})
           (dom/text label))))))
 
 (e/defn AxisLeft [{:keys [chart y-scale]}]
@@ -42,8 +42,7 @@
                               :stroke "black"
                               :stroke-opacity 0.1
                               :stroke-width 1}))
-        (svg/text (dom/props {:x 0
+        (svg/text (dom/props {:x -15
                               :y y
-                              :font-weight "bold"
-                              :text-anchor "end"})
+                              :font-size 10})
           (dom/text label))))))
