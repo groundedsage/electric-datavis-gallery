@@ -6,7 +6,8 @@
             [app.category-lists :as c-list]
             
             ;; Animation
-            [app.animation.connected-scatterplot :as connected-scatterplot]))
+            [app.animation.connected-scatterplot :as connected-scatterplot]
+            [app.animation.the-wealth-of-nations :as the-wealth-of-nations]))
 
 (defonce !current-page (atom :main))
 (e/def current-page (e/client (e/watch !current-page)))
@@ -43,8 +44,8 @@
             (Category. "Maps" c-list/maps)
             (Category. "Essays" c-list/essays)
             (Category. "Just for fun" c-list/just-for-fun))
-    :connected-scatterplot (dom/div 
-                             (connected-scatterplot/Chart.))))
+    :connected-scatterplot (connected-scatterplot/Chart.)
+    :the-wealth-and-health-of-nations (the-wealth-of-nations/Chart.)))
 
 
 (e/defn Todo-list []

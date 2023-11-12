@@ -2,7 +2,13 @@
   (:require contrib.str
             [hyperfiddle.electric :as e]
             [hyperfiddle.electric-dom2 :as dom]
-            [hyperfiddle.electric-svg :as svg]))
+            [hyperfiddle.electric-svg :as svg]
+            #?(:clj [tech.v3.datatype.statistics :as stats])))
+
+#?(:clj (defn col->min-max [data colname]
+          (let [c (get data colname)]
+            [(stats/min c)
+             (stats/max c)])))
 
 (e/defn AxisBottom [{:keys [chart x-scale]}]
   (let [{:keys [width height margin-bottom]} chart

@@ -1,6 +1,6 @@
 (ns app.category-lists)
 
-(def has-page #{:connected-scatterplot})
+(def has-page #{:connected-scatterplot :the-wealth-and-health-of-nations})
 (def completed #{})
 
 (def animation [:animated-treemap
