@@ -37,7 +37,9 @@ I hope that this can become a refernce point of how to perform certain datavisua
 
 Below is a continuation of the relevant docs to get started with this repo from the Electric Clojure starter app readme.
 
+You will also want to install the javascript dependencies
 
+`npm install`
 
 ```
 $ clj -A:dev -X user/main
