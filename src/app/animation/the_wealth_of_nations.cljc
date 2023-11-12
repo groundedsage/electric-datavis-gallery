@@ -47,7 +47,7 @@
       (.nice)
       (.range (clj->js [margin-left (- width margin-right)])))))
 
-(e/defn Plot []
+#_(e/defn Plot []
   (let [shaped-data (e/server (let [y-life-expectancy (vec (:life-expect shaped-data))
                                     x-income (map second (get shaped-data "income"))
                                     population (map second (get shaped-data "population"))]
@@ -57,7 +57,7 @@
       (e/for-by identity [{:keys [x y population]} shaped-data]
         (svg/circle (dom/props {:cx x
                                 :cy y
-                                :r population}))))))
+                                :r 5}))))))
 
 (e/defn Chart []
   (let [{:keys [width height]} chart]
@@ -74,7 +74,7 @@
                           :x-scale x-scale})
         (lib/AxisLeft. {:chart chart
                         :y-scale y-scale})
-        (Plot.)))))
+        #_(Plot.)))))
 
 (comment
   #?(:clj (def data (charred/read-json (io/resource "data/nations.json"))))
