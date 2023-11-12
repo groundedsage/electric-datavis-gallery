@@ -29,6 +29,10 @@ I find that such abstractions often get in the way. The best abstractions are th
 
 I hope that this can become a refernce point of how to perform certain datavisualisations from scratch. We can also have [React](https://electric.hyperfiddle.net/user.demo-reagent-interop!ReagentInterop) versions by doing interop from Electric. From this point of reference only then can we see if a generic layer of abstraction provides the right level of trade-offs in flexibility, readability and code reduction.
 
+### Resources
+
+- [awesome-datavis-education](https://github.com/datavis-tech/awesome-dataviz-education)
+
 ---
 
 Below is a continuation of the relevant docs to get started with this repo from the Electric Clojure starter app readme.
