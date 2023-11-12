@@ -10,6 +10,10 @@
             #?(:clj [tech.v3.dataset :as ds])
             #?(:clj [tech.v3.datatype.statistics :as stats])))
 
+;; TODO:
+;; - animate labels
+;; - start animation on load instead of timeout
+
 (def chart {:width 928
             :height 720
             :margin-top 20
@@ -143,7 +147,7 @@
                               anim-labels (js->clj (.getElementsByClassName js/document "label-animate"))]
                           (reset! !line-length length)
                           (.beginElement anim-path)
-                          (map (fn [] (.beginElement %)) anim-labels))
+                          (map (fn [x] (.beginElement x)) anim-labels))
           1000)
         
         (Plot. tdata)

@@ -21,7 +21,11 @@
             (when (c-list/has-page i)
               (dom/props {:style {:color "blue"}})
               (dom/on "click" (e/fn [_] (reset! !current-page i))))
-            (dom/text (str i))))))))
+            (dom/text (str i)))
+          (when (and
+                  (c-list/has-page i)
+                  (not (c-list/completed i)))
+            (dom/i (dom/text " - partially completed"))))))))
 
 (e/defn RenderPage [page]
   (case page
