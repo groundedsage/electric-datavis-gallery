@@ -1,69 +1,65 @@
 (ns app.todo-list
   (:require contrib.str
-            #?(:clj [datascript.core :as d]) ; database on server
             [hyperfiddle.electric :as e]
             [hyperfiddle.electric-dom2 :as dom]
-            [hyperfiddle.electric-ui4 :as ui]))
+            [hyperfiddle.electric-ui4 :as ui]
+            [app.category-lists :as c-list]
+            
+            ;; Animation
+            [app.animation.connected-scatterplot :as connected-scatterplot]))
 
-#?(:clj (defonce !conn (d/create-conn {}))) ; database on server
-(e/def db) ; injected database ref; Electric defs are always dynamic
+(defonce !current-page (atom :main))
+(e/def current-page (e/client (e/watch !current-page)))
 
-(e/defn TodoItem [id]
-  (e/server
-    (let [e (d/entity db id)
-          status (:task/status e)]
-      (e/client
-        (dom/div
-          (ui/checkbox
-            (case status :active false, :done true)
-            (e/fn [v]
-              (e/server
-                (d/transact! !conn [{:db/id id
-                                     :task/status (if v :done :active)}])
-                nil))
-            (dom/props {:id id}))
-          (dom/label (dom/props {:for id}) (dom/text (e/server (:task/description e)))))))))
+(e/defn Category [title items]
+  (dom/div
+    (dom/h2 (dom/text title))
+    (dom/ul
+      (e/for-by identity [i items]
+        (dom/li
+          (dom/a
+            (when (c-list/has-page i)
+              (dom/props {:style {:color "blue"}})
+              (dom/on "click" (e/fn [_] (reset! !current-page i))))
+            (dom/text (str i))))))))
 
-(e/defn InputSubmit [F]
-  ; Custom input control using lower dom interface for Enter handling
-  (dom/input (dom/props {:placeholder "Buy milk"})
-    (dom/on "keydown" (e/fn [e]
-                        (when (= "Enter" (.-key e))
-                          (when-some [v (contrib.str/empty->nil (-> e .-target .-value))]
-                            (new F v)
-                            (set! (.-value dom/node) "")))))))
+(e/defn RenderPage [page]
+  (case page
+    :main (dom/div 
+            (Category. "Animation" c-list/animation)
+            (Category. "Interactive" c-list/interaction)
+            (Category. "Analysis" c-list/analysis)
+            (Category. "Hierarchies" c-list/hierarchies)
+            (Category. "Networks" c-list/networks)
+            (Category. "Lines" c-list/lines)
+            (Category. "Area" c-list/area)
+            (Category. "Dots" c-list/dots)
+            (Category. "Radial" c-list/radial)
+            (Category. "Bars" c-list/annotation)
+            (Category. "Maps" c-list/maps)
+            (Category. "Essays" c-list/essays)
+            (Category. "Just for fun" c-list/just-for-fun))
+    :connected-scatterplot (dom/div 
+                             (connected-scatterplot/Chart.))))
 
-(e/defn TodoCreate []
-  (e/client
-    (InputSubmit. (e/fn [v]
-                    (e/server
-                      (d/transact! !conn [{:task/description v
-                                           :task/status :active}])
-                      nil)))))
-
-#?(:clj (defn todo-count [db]
-          (count
-            (d/q '[:find [?e ...] :in $ ?status
-                   :where [?e :task/status ?status]] db :active))))
-
-#?(:clj (defn todo-records [db]
-          (->> (d/q '[:find [(pull ?e [:db/id :task/description]) ...]
-                      :where [?e :task/status]] db)
-            (sort-by :task/description))))
 
 (e/defn Todo-list []
-  (e/server
-    (binding [db (e/watch !conn)]
-      (e/client
-        (dom/link (dom/props {:rel :stylesheet :href "/todo-list.css"}))
-        (dom/h1 (dom/text "minimal todo list"))
-        (dom/p (dom/text "it's multiplayer, try two tabs"))
-        (dom/div (dom/props {:class "todo-list"})
-          (TodoCreate.)
-          (dom/div {:class "todo-items"}
-            (e/server
-              (e/for-by :db/id [{:keys [db/id]} (todo-records db)]
-                (TodoItem. id))))
-          (dom/p (dom/props {:class "counter"})
-            (dom/span (dom/props {:class "count"}) (dom/text (e/server (todo-count db))))
-            (dom/text " items left")))))))
+  (e/client
+    (dom/link (dom/props {:rel :stylesheet :href "/todo-list.css"}))
+    (dom/h1 (dom/text "Electric Datavis Gallery"))
+    (when-not (= current-page :main)
+      (ui/button (e/fn [] (reset! !current-page :main))
+        (dom/div
+          (dom/text "Return to main page"))))
+    (dom/p (dom/text "A gallery of data visualisations based on the ")
+      (dom/a (dom/props {:href "https://observablehq.com/@d3/gallery?utm_source=d3js-org&utm_medium=hero&utm_campaign=try-observable"})
+        (dom/text "D3 gallery"))) 
+    (RenderPage. current-page)
+    #_(connected-scatterplot/Chart.)))
+
+
+(comment 
+  
+  (#{:hello :there} :no)
+  
+  )

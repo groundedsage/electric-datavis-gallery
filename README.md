@@ -1,4 +1,39 @@
-# electric-starter-app
+# Electric Datavis Gallery
+
+I wanted to perform some data visualisation and found it difficult to find reference sources - especially in Clojurescript. 
+
+The Gold Standard for web based data visualisations is [D3](https://d3js.org/) but this was also created at a time when DOM management was very manual and tedius. The state of Javascript and DOM management has improved a lot. Most people opt for doing data visualisations in their frontend framework of choice and using D3 only for math. Airbnb did this with their flexible visualisation library [visx](https://airbnb.io/visx/).
+
+ I think we can do better with Clojure. My observation is that a lot of these libraries are offering conveniences to avoid writing boilerplate which is avoided in a more concise language.
+
+
+There has been efforts to make data visualisation and interactive visuals in Clojure and Clojurescript.
+
+Clojurescript/Clojure
+- [Oz](https://github.com/metasoarous/oz) - Uses vega and vega-lite
+- [svg-clj](https://github.com/adam-james-v/svg-clj) - svg abstractions
+- [Hanami](https://github.com/jsa-aerial/hanami) - vega and vega-list
+- [Quil](https://github.com/quil/quil) - processing and p5.js
+- [thi.ng/geom](https://github.com/thi-ng/geom)
+- [C2](https://github.com/lynaghk/c2) - archived
+
+JVM Only
+- [Darkstar](https://github.com/applied-science/darkstar)
+- [cljplot](https://github.com/generateme/cljplot)
+- [Dali](https://github.com/stathissideris/dali)
+
+More can be found at [scicloj](https://scicloj.github.io/docs/resources/libs/#data-visualization-libraries)
+
+---
+I find that such abstractions often get in the way. The best abstractions are the ones we write for ourselves. But to do that we need to know how to play with the raw materials. This gallery is a collection of demos from the [D3 Gallery](https://observablehq.com/@d3/gallery?utm_source=d3js-org&utm_medium=hero&utm_campaign=try-observable) using as little as possible libraries that abstract over the ground level semantics of working with SVG.
+
+I hope that this can become a refernce point of how to perform certain datavisualisations from scratch. We can also have [React](https://electric.hyperfiddle.net/user.demo-reagent-interop!ReagentInterop) versions by doing interop from Electric. From this point of reference only then can we see if a generic layer of abstraction provides a the right level of trade-offs in flexibility, readability and code reduction.
+
+---
+
+Below is a continuation of the relevant docs to get started with this repo from the Electric Clojure starter app readme.
+
+
 
 ```
 $ clj -A:dev -X user/main
@@ -59,43 +94,3 @@ We decided not to throw an exception here because it is almost always unintentio
 
 [Note: Perhaps we should revisit this decision in the future now that our exception handling is more mature.]
 
-# Deployment
-
-ClojureScript optimized build, Dockerfile, Uberjar, Github actions CD to fly.io
-
-```
-HYPERFIDDLE_ELECTRIC_APP_VERSION=`git describe --tags --long --always --dirty`
-clojure -X:build uberjar :jar-name "app.jar" :version '"'$HYPERFIDDLE_ELECTRIC_APP_VERSION'"'
-java -DHYPERFIDDLE_ELECTRIC_SERVER_VERSION=$HYPERFIDDLE_ELECTRIC_APP_VERSION -jar app.jar
-```
-
-```
-docker build --progress=plain --build-arg VERSION="$HYPERFIDDLE_ELECTRIC_APP_VERSION" -t electric-starter-app .
-docker run --rm -p 7070:8080 electric-starter-app
-```
-
-```
-fly launch # generate fly.toml
-fly status
-fly regions list
-fly platform vm-sizes
-fly scale vm shared-cpu-4x
-NO_COLOR=1 fly deploy --build-arg VERSION="$HYPERFIDDLE_ELECTRIC_APP_VERSION"
-# `NO_COLOR=1` disables docker-cli pagination to see full log in case of exception
-# `--build-only` tests the build on fly.io without deploying
-
-https://fly.io/docs/about/pricing/
-https://fly.io/docs/apps/scale-machine/
-https://community.fly.io/t/how-to-specify-regions-to-run-in/3048
-
-# DNS
-fly ips list
-fly ips allocate-v4
-# configure DNS A and AAAA records
-fly certs create "*.electricfiddle.net" # quote * to avoid shell expansion
-fly certs list
-fly certs check "*.electricfiddle.net"
-fly certs show "*.electricfiddle.net"
-
-https://electric-starter-app.fly.dev/
-```
