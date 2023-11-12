@@ -53,13 +53,6 @@
           (dom/text "Return to main page"))))
     (dom/p (dom/text "A gallery of data visualisations based on the ")
       (dom/a (dom/props {:href "https://observablehq.com/@d3/gallery?utm_source=d3js-org&utm_medium=hero&utm_campaign=try-observable"})
-        (dom/text "D3 gallery"))) 
-    (RenderPage. current-page)
-    #_(connected-scatterplot/Chart.)))
+        (dom/text "D3 gallery")))
+    (RenderPage. current-page)))
 
-
-(comment 
-  
-  (#{:hello :there} :no)
-  
-  )

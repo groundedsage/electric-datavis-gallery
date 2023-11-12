@@ -17,6 +17,7 @@
             :margin-bottom 35
             :margin-left 40})
 
-#?(:clj (def data (ds/->dataset "resources/data/nations.json")))
-
-(slurp "resources/data/nations.json")
+(comment
+  #?(:clj (def data (ds/->dataset "resources/data/nations.json"))) 
+  (slurp "resources/data/nations.json")
+  )
