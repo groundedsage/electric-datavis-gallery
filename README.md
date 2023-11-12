@@ -27,7 +27,7 @@ More can be found at [scicloj](https://scicloj.github.io/docs/resources/libs/#da
 ---
 I find that such abstractions often get in the way. The best abstractions are the ones we write for ourselves. But to do that we need to know how to play with the raw materials. This gallery is a collection of demos from the [D3 Gallery](https://observablehq.com/@d3/gallery?utm_source=d3js-org&utm_medium=hero&utm_campaign=try-observable) using as little as possible libraries that abstract over the ground level semantics of working with SVG.
 
-I hope that this can become a refernce point of how to perform certain datavisualisations from scratch. We can also have [React](https://electric.hyperfiddle.net/user.demo-reagent-interop!ReagentInterop) versions by doing interop from Electric. From this point of reference only then can we see if a generic layer of abstraction provides a the right level of trade-offs in flexibility, readability and code reduction.
+I hope that this can become a refernce point of how to perform certain datavisualisations from scratch. We can also have [React](https://electric.hyperfiddle.net/user.demo-reagent-interop!ReagentInterop) versions by doing interop from Electric. From this point of reference only then can we see if a generic layer of abstraction provides the right level of trade-offs in flexibility, readability and code reduction.
 
 ---
 
