@@ -52,6 +52,11 @@
       (.nice)
       (.range (clj->js [margin-left (- width margin-right)])))))
 
+(e/def r-scale
+  (d3-scale/scaleSqrt 
+    (clj->js [0 5e8])
+    (clj->js [0 (/ (:width chart) 24)])))
+
 #?(:cljs (def color-scale
            (d3-scale/scaleOrdinal (clj->js (vec regions)) d3-chromatic/schemeCategory10)))
 
@@ -71,11 +76,13 @@
           (let [row (e/server (first (vec (ds/rows (ds/select-rows plot-columns [i])))))
                 x (x-scale  (second (get row "income")))
                 y (y-scale (second (get row "lifeExpectancy")))
-                region (get row "region")]
+                color (color-scale (get row "region"))
+                r (r-scale (second (get row "population")))]
+            (println "the population" population)
             (svg/circle (dom/props {:cx x
                                     :cy y
-                                    :r 5
-                                    :fill (color-scale region)})))))))
+                                    :r r
+                                    :fill color})))))))
 
 (e/defn Chart []
   (let [{:keys [width height]} chart]
