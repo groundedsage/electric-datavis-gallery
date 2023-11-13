@@ -78,7 +78,6 @@
                 y (y-scale (second (get row "lifeExpectancy")))
                 color (color-scale (get row "region"))
                 r (r-scale (second (get row "population")))]
-            (println "the population" population)
             (svg/circle (dom/props {:cx x
                                     :cy y
                                     :r r
