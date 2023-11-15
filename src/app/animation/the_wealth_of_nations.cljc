@@ -61,7 +61,7 @@
            (d3-scale/scaleOrdinal (clj->js (vec regions)) d3-chromatic/schemeCategory10)))
 
 (defonce !year (atom 1800))
-(e/def year (e/watch !year))
+(e/def year (e/server (e/watch !year)))
 
 #?(:clj (e/def plot-columns (-> (ds/concat
                                 (ds/filter-column shaped-data "income" (fn [[y v]] (= y year)))
