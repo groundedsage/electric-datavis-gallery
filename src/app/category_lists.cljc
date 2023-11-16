@@ -1,7 +1,7 @@
 (ns app.category-lists)
 
-(def has-page #{:connected-scatterplot :the-wealth-and-health-of-nations})
-(def completed #{})
+(def has-page #{:connected-scatterplot :the-wealth-and-health-of-nations :pannable-chart})
+(def completed #{:connected-scatterplot})
 
 (def animation [:animated-treemap
                 :temporal-force-directed-graph

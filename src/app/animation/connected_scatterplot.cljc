@@ -5,10 +5,8 @@
             [hyperfiddle.electric-svg :as svg]
             [hyperfiddle.electric-ui4 :as ui]
             [app.lib :as lib]
-            #?(:cljs ["d3-scale" :as d3-scale])
             #?(:cljs ["d3-shape" :as d3-shape])
-            #?(:clj [tech.v3.dataset :as ds])
-            #?(:clj [tech.v3.datatype.statistics :as stats])))
+            #?(:clj [tech.v3.dataset :as ds])))
 
 (def chart {:width 928
             :height 720
@@ -25,29 +23,18 @@
 (e/def vis-line-elem (e/client (e/watch !vis-line-elem)))
 (e/def label-anim-elems (e/client (e/watch !label-anim-elems)))
 
-(e/def line-length (e/client (when-let [elem (:node vis-line-elem)] 
+(e/def line-length (e/client (when-let [elem (:node vis-line-elem)]
                                (.getTotalLength elem))))
 
-#?(:clj (defn col->min-max [data colname]
-          (let [c (get data colname)]
-            [(stats/min c)
-             (stats/max c)])))
-
 (e/def x-scale
-  (let [{:keys [width margin-left margin-right]} chart
-        domain-data (e/server (col->min-max data "miles"))]
-    (-> (d3-scale/scaleLinear) 
-      (.domain (clj->js domain-data))
-      (.nice)
-      (.range (clj->js [margin-left (- width margin-right)])))))
+  (let [{:keys [width margin-left margin-right]} chart]
+    (lib/linear-scale {:domain (e/server (lib/col->min-max data "miles"))
+                       :range [margin-left (- width margin-right)]})))
 
 (e/def y-scale
-  (let [{:keys [height margin-top margin-bottom]} chart
-        domain-data (e/server (col->min-max data "gas"))]
-    (-> (d3-scale/scaleLinear)
-      (.domain (clj->js domain-data))
-      (.nice)
-      (.range (clj->js [(- height margin-bottom) margin-top])))))
+  (let [{:keys [height margin-top margin-bottom]} chart]
+    (lib/linear-scale {:domain (e/server (lib/col->min-max data "gas"))
+                       :range [(- height margin-bottom) margin-top]})))
 
 #?(:cljs (defn start-line-animation! []
            (let [{:keys [node keyframes options]} @!vis-line-elem
@@ -133,7 +120,7 @@
 (e/defn Chart []
   (when (and (< 0 line-length)
           (seq (:nodes label-anim-elems)))
-    (start-animations!)) 
+    (start-animations!))
   (let [{:keys [width height]} chart
         data (e/server (seq (ds/rows data)))
         tdata (map (fn [col]
@@ -153,13 +140,15 @@
       (svg/svg (dom/props {:width width
                            :height height
                            :viewBox (str "0 0 " width " " height)
-                           :style {:border "solid black 1px"
-                                   :max-width "100%"
+                           :style {:max-width "100%"
                                    :height "auto"}})
         (lib/AxisBottom. {:chart chart
-                          :x-scale x-scale})
+                          :x-scale x-scale
+                          :label-dist "0.71em"})
         (lib/AxisLeft. {:chart chart
-                        :y-scale y-scale})
+                        :y-scale y-scale
+                        :label-dist -25
+                        :pos 3})
         (let [elem (svg/path (dom/props {:id "vis-line"
                                          :fill "none"
                                          :stroke "black"
