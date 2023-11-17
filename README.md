@@ -1,5 +1,7 @@
 # Electric Datavis Gallery
 
+A replication of data visualisation examples originally created in D3 [here](https://observablehq.com/@d3/gallery?utm_source=d3js-org&utm_medium=hero&utm_campaign=try-observable).
+
 I wanted to perform some data visualisation and found it difficult to find reference sources - especially in Clojurescript. 
 
 The Gold Standard for web based data visualisations is [D3](https://d3js.org/) but this was also created at a time when DOM management was very manual and tedius. The state of Javascript and DOM management has improved a lot. Most people opt for doing data visualisations in their frontend framework of choice and using D3 only for math. Airbnb did this with their flexible visualisation library [visx](https://airbnb.io/visx/).
